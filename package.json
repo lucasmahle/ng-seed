@@ -1,0 +1,25 @@
+{
+  "name": "ng-seed",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Project manager for AngularJS",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasmahle/ng-seed.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Lucas Mahle",
+    "email": "lucassmahle@gmail.com",
+    "url": "http://lucasmahle.com.br"
+  },
+  "dependencies": {
+    "optimist": "^0.6.1"
+  },
+  "devDependencies": {
+    "http-server": "^0.8.5"
+  },
+  "scripts": {
+    "start": "http-server -a localhost -p 8000 -c-1"
+  }
+}
