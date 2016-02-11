@@ -1,7 +1,6 @@
 {
 	"appname": "",
-	"autoload": "",
-	"layoutbase": "",
-	"dependencies": [],
+	"base_url": "",
+	"autoload": "app-scripts.html",
 	"modules": []
 }

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<title>CMD NG-SEED</title>
+		<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script>
+			if(/^file/.test(window.location.href)){
+				window.location.href = 'http://localhost/ng-seed/cmd.html';
+			}
+			;(function($){
+				$(function(){
+					var
+					$cmd	 = $("#cmd"),
+					$log	 = $(".console"),
+					$form	 = $("#form"),
+					$helpers = $("#helpers"),
+
+
+					consoleLog = function(log){
+						log = log.split("\n|\r");
+						
+						log = log.map(function( el ){
+							return '<span>' + el + '</span>';
+						});
+						log = log.join("\n");
+
+						$log.html( log );
+					},
+					execCmd = function( cmd ){
+						cmd = cmd.replace('php ', '');
+
+						consoleLog('Executing php "'+cmd+'"');
+						$.post('ng-seed.php', {cmd: cmd}, function( context ){
+							consoleLog(context);
+						});
+					},
+					handleExecute = function(e){
+						if(e && e.preventDefault)
+							e.preventDefault();
+						execCmd($cmd.val());
+					},
+					helperClick = function(e){
+						if(e && e.preventDefault)
+							e.preventDefault();
+						$cmd
+							.val( $(this).html() )
+							.focus();
+					};
+
+					$helpers.on('click', 'a', helperClick );
+					$form.on('submit', handleExecute);
+				});
+			}(jQuery));
+		</script>
+	</head>
+	<body>
+		<form action="" id="form">
+			<input type="text" placeholder="Put your command here. Ex: php ng-seed.php user:controller" id="cmd" size="60">
+			<input type="submit" value="Run" id="run">
+		</form>
+
+		<div class="clear"></div>
+		<pre class="console">
+		</pre>
+		<div class="clear"></div>
+
+		<div id="helpers">
+			<strong>Helpers:</strong>
+			<ul>
+				<li><a href="#">php ng-seed.php </a></li>
+
+				<li><a href="#">php ng-seed.php app:init</a></li>
+				<li><a href="#">php ng-seed.php app:install</a></li>
+				<li><a href="#">php ng-seed.php app:name app</a></li>
+				<li><a href="#">php ng-seed.php app:view-type jade</a></li>
+
+				<li><a href="#">php ng-seed.php app:module users</a></li>
+				<li><a href="#">php ng-seed.php users:config users</a></li>
+				<li><a href="#">php ng-seed.php users:controller users</a></li>
+				<li><a href="#">php ng-seed.php users:directive users</a></li>
+				<li><a href="#">php ng-seed.php users:service users</a></li>
+				<li><a href="#">php ng-seed.php users:factory users</a></li>
+				<li><a href="#">php ng-seed.php users:view main</a></li>
+			</ul>
+		</div>
+
+		<style>
+			body {
+				font-family: Helvetica, Arial, sans-serif;
+				font-size: 16px;
+			}
+			#cmd{
+				padding: 4px;
+				border: 1px solid #909090;
+			}
+			#run{
+				padding: 3px 4px;
+			}
+			#helpers{
+				margin-top: 15px;
+			}
+			#helpers a,
+			#helpers a:visited {
+				color: #000;
+				text-decoration: none;
+			}
+			.console {
+				float: left;
+				color: #00C100;
+				background-color: #000;
+				padding: 5px 10px;
+			}
+			.console span {
+				display: inline-block;
+				width: 100%;
+				margin: 0;
+				padding: 3px;
+			}
+			.console span:hover{
+				background-color: rgba(0, 193, 0, 0.32);
+			}
+			.clear {
+				clear: both;
+			}
+		</style>
+	</body>
+</html>

@@ -2,10 +2,10 @@
 	'use strict';
 
 	/** Aplication: %appname%
-	  * Author:
+	  * Module: %module%
 	  * Description: 
 	  */
 
-	angular.module('%appname%', []);
+	angular.module('%appname%.%module%', []);
 
 }());
