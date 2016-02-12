@@ -18,14 +18,14 @@
 
 
 					consoleLog = function(log){
-						log = log.split("\n|\r");
+						// log = log.split("\n|\r");
 						
-						log = log.map(function( el ){
-							return '<span>' + el + '</span>';
-						});
-						log = log.join("\n");
+						// log = log.map(function( el ){
+						// 	return '<span>' + el + '</span>';
+						// });
+						// log = log.join("\n");
 
-						$log.html( log );
+						$log.text( log );
 					},
 					execCmd = function( cmd ){
 						cmd = cmd.replace('php ', '');
@@ -70,10 +70,10 @@
 			<ul>
 				<li><a href="#">php ng-seed.php </a></li>
 
-				<li><a href="#">php ng-seed.php app:init</a></li>
+				<li><a href="#">php ng-seed.php app:init "name" "base_url" "authorname"</a></li>
 				<li><a href="#">php ng-seed.php app:install</a></li>
-				<li><a href="#">php ng-seed.php app:name app</a></li>
-				<li><a href="#">php ng-seed.php app:view-type jade</a></li>
+				<li><a href="#">php ng-seed.php app:filter "name"</a></li>
+				<li><a href="#">php ng-seed.php app:set "extension" "php"</a></li>
 
 				<li><a href="#">php ng-seed.php app:module users</a></li>
 				<li><a href="#">php ng-seed.php users:config users</a></li>
@@ -81,7 +81,7 @@
 				<li><a href="#">php ng-seed.php users:directive users</a></li>
 				<li><a href="#">php ng-seed.php users:service users</a></li>
 				<li><a href="#">php ng-seed.php users:factory users</a></li>
-				<li><a href="#">php ng-seed.php users:view main</a></li>
+				<li><a href="#">php ng-seed.php users:delete</a></li>
 			</ul>
 		</div>
 

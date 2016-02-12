@@ -1,6 +1,10 @@
 {
 	"appname": "",
 	"base_url": "",
-	"autoload": "app-scripts.html",
+	"author": "",
+	"autoload": "app-scripts",
+	"extension": "html",
+	"filters": [],
+	"injections": [],
 	"modules": []
 }

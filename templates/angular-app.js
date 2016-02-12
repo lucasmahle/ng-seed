@@ -2,13 +2,10 @@
 	'use strict';
 
 	/** Aplication: %appname%
-	  * Author: %authorname%
+	  * Author: %author%
 	  * Description: 
 	  */
 
-	angular.module('%appname%', [
-		// --Start--app
-		// --End--app
-	]);
+	angular.module('%appname%', %appinjection%);
 
 }());
