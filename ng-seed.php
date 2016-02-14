@@ -14,7 +14,7 @@ function splitArguments($args) {
 /**
  * Get args. If by terminal, args get from $_SERVER['argv'] else, is by post type
  */
-if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['cmd']))
+if(@$_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['cmd']))
 	$argv = splitArguments($_POST['cmd']);
 else if(isset($_SERVER['argv']))
 	$argv = $_SERVER['argv'];

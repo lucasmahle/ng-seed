@@ -22,7 +22,7 @@ class Ngseed {
 
 		$type = explode(':', $this->args[0]);
 		if($type[0] == 'app'){
-			$this->app_execution(str_replace('app:', '', $type[0]));
+			$this->app_execution($type[1]);
 		} else {
 			$this->module_execution();
 		}
@@ -78,9 +78,9 @@ class Ngseed {
 		return null;
 	}
 	private function exception($content){
-		die('End execution at: ' . date('H:i:s') . "\n{$content}");
+		die('End execution at: ' . date('H:i:s') . "\n{$content}" . "\n");
 	}
-	private function create_folder($dir, $mode = "0777"){
+	private function create_folder($dir, $mode = 0777){
 		if(!file_exists($dir))
 			return mkdir($dir, $mode);
 
@@ -192,13 +192,19 @@ class Ngseed {
 	private function update_autoload(){
 		// Read json
 		$json = $this->read_json();
+		$scripts = array();
 
 		// Add filters
+		foreach ($json["filters"] as $filter) {
+
+			// Add app.js of module
+			$scripts[] = strtolower($filter.'-filter.js');
+		}
 
 		// Create new array
-		$scripts = array(
-			'app.js', 'config.js', 'routes.js'
-		);
+		$scripts[] = 'app.js';
+		$scripts[] = 'config.js';
+		$scripts[] = 'routes.js';
 
 		// Iterate modules and files
 		foreach ($json["modules"] as $module) {
@@ -208,16 +214,16 @@ class Ngseed {
 			unset($module['modulename']);
 			unset($module['test']);
 
-			// Add app.js of module
-			$scripts[] = $module_name . '/app.js';
-
 			// Each module
 			foreach ($module as $files) {
 				// Each type file (controller, directive, ...)
 				foreach ($files as $file) {
-					$scripts[] = $module_name . '/' . $file;
+					$scripts[] = strtolower($module_name . '/' . $file);
 				}
 			}
+
+			// Add app.js of module
+			$scripts[] = $module_name . '/app.js';
 		}
 
 		// Reverse priority, because we need last the app.js's
@@ -230,14 +236,47 @@ class Ngseed {
 		}
 		
 		// Save with extension
-		$this->create_file($this->base_dir.'/'.$json['autoload'].'.'.$json['extension'], $_out, "w");
+		$this->create_file($this->app_dir.'/'.$json['autoload'].'.'.$json['extension'], $_out, "w");
 	}
 
-	private function create_filter($filter){
+	private function create_filter($name){
 		// Read json
+		$json = $this->read_json();
+
 		// Update json
+		if( isset($json['filters'][$name]) ){
+			$this->exception('Erro: The filter "' . $name . '" already exists.');
+		}
+		$json['filters'][] = $name;
+
 		// Create file
-		// Update autoload
+		$this->create_app_file('filters', 'filter', $name);
+
+		// Update json
+		$this->write_json($json);
+
+		// Update app
+		$this->update_app();
+	}
+	private function delete_filter($name){
+		// Read json
+		$json = $this->read_json();
+
+		foreach ($json['filters'] as $index => $filter) {
+			if($filter == $name){
+				unset($json['filter'][$index]);
+				continue;
+			}
+		}
+
+		// Create file
+		unlink($this->app_dir.'/filters/filter-'.strtolower($name).'.js');
+
+		// Update json
+		$this->write_json($json);
+
+		// Update app
+		$this->update_app();
 	}
 	private function delete_module($name){
 		// Read json
@@ -257,7 +296,7 @@ class Ngseed {
 		// Remove files and folders
 		$this->recursive_delete($this->app_dir . '/' . $name);
 
-		// Update files
+		// Update app
 		$this->update_app();
 	}
 	private function create_module($name){
@@ -276,7 +315,7 @@ class Ngseed {
 		// Create app.js
 		$this->create_file($module_dir . "/app.js", $this->render('app.js', array(
 			"appname" => $this->app_name,
-			"module"=> $name
+			"module" => $name
 		)));
 
 		// Create config-name.js
@@ -303,18 +342,20 @@ class Ngseed {
 		// Save json
 		$this->write_json($json);
 
-		return true;
+		// Update app
+		$this->update_app();
 	}
 	private function create_app_file($module, $file, $name){
 		$data = array(
 			"appname" => $this->app_name,
-			"module"=> $name,
-			"controllername"=> ucfirst($name) . "Ctrl"
+			"module" => $name,
+			"controllername" => ucfirst($name) . "Ctrl",
+			"filtername" => $name,
 		);
 
 		$template = $this->render($file . ".js", $data);
 		
-		$this->create_file($this->app_dir.'/'.$module.'/'.$file.'-'.$name.'.js', $template);
+		$this->create_file($this->app_dir.'/'.$module.'/'.$file.'-'.strtolower($name).'.js', $template);
 		return true;
 	}
 	
@@ -338,18 +379,19 @@ class Ngseed {
 		}
 		if($file != "delete"){
 			$this->create_app_file($module, $file, $name);
-			die('The file "' . $file . '" is created with success on module ' . $module);
+			die('The file "' . $file . '" is created with success on module ' . $module . "\n");
 		} else {
 			$this->delete_module($module);
-			die('The module ' . $module . ' is deleted.');
+			die('The module ' . $module . ' is deleted.' . "\n");
 		}
 	}
-	private function app_execution($cmd){		
+	private function app_execution($cmd){
 		switch ($cmd) {
 			case 'init':   $this->init_method(); break;
 			case 'module': $this->module_method(); break;
 			case 'update': $this->update_method(); break;
 			case 'filter': $this->filter_method(); break;
+			case 'filter_delete': $this->filter_delete_method(); break;
 			case 'set':    $this->set_method(); break;
 			
 			default:
@@ -365,19 +407,18 @@ class Ngseed {
 			$this->exception('Error: Filters is not valid name.');
 		}
 		$this->create_module($this->args[1]);
-		die('Module "' . $this->args[1] . '" created with success.');
+		die('Module "' . $this->args[1] . '" created with success.' . "\n");
+	}
+	private function filter_delete_method(){
+		$this->delete_filter($this->args[1]);
 	}
 	private function filter_method(){
-		if(file_exists( $this->app_dir . '/filters/' . $this->args[1] . '.js' )){
-			$this->exception('Error: Filter "' . $this->args[1] . '" already exist.')
-		}
-		
 		$this->create_filter($this->args[1]);
 	}
 	private function update_method(){
 		$this->update_injections();
 		$this->update_autoload();
-		die('Instalation is completed');
+		die('Update is completed' . "\n");
 	}
 	private function set_method(){
 		if(count($this->args) < 2){
@@ -392,7 +433,7 @@ class Ngseed {
 		
 		// Save
 		$this->write_json($json);
-		die('The key "' . $this->args[1] . '" updated to "' . $this->args[2] . '"');
+		die('The key "' . $this->args[1] . '" updated to "' . $this->args[2] . '"' . "\n");
 	}
 	private function init_method(){
 		if( $this->json_exists() ){
@@ -406,7 +447,6 @@ class Ngseed {
 		// Data json
 		$content['appname']  = $this->args[1];
 		$content['base_url'] = $this->args[2];
-		$content['author']   = $this->args[3];
 		
 		// Create json to manage the app and load name
 		$this->create_file( $this->base_dir.'/'.$this->config_json, $this->json_pretty($content) );
@@ -427,9 +467,6 @@ class Ngseed {
 
 		// Make core module
 		$this->create_module('core');
-		die('Module "core" created with success');
+		die('Module "core" created with success' . "\n");
 	}
 }
-
-// Add filter
-// Remove filter
