@@ -447,6 +447,7 @@ class Ngseed {
 		// Data json
 		$content['appname']  = $this->args[1];
 		$content['base_url'] = $this->args[2];
+		$content['author']   = $this->args[3];
 		
 		// Create json to manage the app and load name
 		$this->create_file( $this->base_dir.'/'.$this->config_json, $this->json_pretty($content) );
