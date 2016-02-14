@@ -1,5 +1,6 @@
 <?php
 require_once("class.ngseed.php");
+
 function splitArguments($args) {
 	preg_match_all('/[\'"].*?[\'"]|[^ ]+/m', $args, $matches);
 	
@@ -13,7 +14,12 @@ function splitArguments($args) {
 /**
  * Get args. If by terminal, args get from $_SERVER['argv'] else, is by post type
  */
-$argv = isset($_POST['cmd']) ? splitArguments($_POST['cmd']) : $_SERVER['argv'];
+if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['cmd']))
+	$argv = splitArguments($_POST['cmd']);
+else if(isset($_SERVER['argv']))
+	$argv = $_SERVER['argv'];
+else
+	exit();
 
 
 /**
