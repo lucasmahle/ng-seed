@@ -6,7 +6,7 @@
 	  * Description: This directive make ...
 	  */
 
-	angular.module('%appname%')
+	angular.module('%appname%.%module%')
 
 	.directive('%type%', function() {
 		return {

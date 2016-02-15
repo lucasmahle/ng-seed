@@ -9,6 +9,13 @@
 
 	.config( function() {
 		// Put yout configurations here
+	})
+	.constant('APP', {
+		"name": "",
+		"version": 0.1,
+		"init_url": '/',
+		'environment': 'development',
+		'debug': true
 	});
 
 }());

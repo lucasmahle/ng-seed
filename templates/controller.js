@@ -2,13 +2,13 @@
 	'use strict';
 	
 	/** Module: %module%
-	  * Controller: %controller%
+	  * Controller: %type%
 	  * Description:
 	  */
 
 	angular.module('%appname%.%module%')
 
-	.controller('%controller%', ['$scope', function($scope) {
+	.controller('%type%', ['$scope', function($scope) {
 		var vm = this;
 		// Code...
 	}]);

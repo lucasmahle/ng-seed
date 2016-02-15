@@ -8,10 +8,10 @@ class Ngseed {
 	private $app_name = '';
 	private $config_json = 'ng-seed.json';
 	private $args = array();
-	private $file_types = array("config", "controller", "directive", "service", "factory", "delete");
+	private $file_types = array("config", "controller", "decorator", "directive", "factory", "service", "delete", "test");
 
 	/**
-	 * Prepare arguments and call app _method or module _method
+	 * Prepare arguments and call app method or module method
 	 */
 	public function exec($args){
 		if( count($args) == 0 ){
@@ -134,6 +134,19 @@ class Ngseed {
 
 		return json_encode( $data );
 	}
+	private function app_padding($content){
+		$content_exp = explode( "\n", $content );
+		$return = array();
+
+		foreach ($content_exp as $line) {
+			if($line != "[")
+				$return[] = "\t" . $line;
+			else
+				$return[] = $line;
+		}
+
+		return implode("\n", $return);
+	}
 	private function update_app(){
 		$this->update_injections();
 		$this->update_autoload();
@@ -183,7 +196,7 @@ class Ngseed {
 		$template = $this->render('angular-app.js', array(
 			'appname' => $json['appname'],
 			'author' => $json['author'],
-			'appinjection' => $this->json_pretty($data)
+			'appinjection' => $this->app_padding($this->json_pretty($data))
 		));
 		
 		// Rewrite app.js
@@ -347,17 +360,33 @@ class Ngseed {
 		$this->update_app();
 	}
 	private function create_app_file($module, $file, $name){
+		// Data render
 		$data = array(
 			"appname" => $this->app_name,
 			"module" => $name,
-			"controller" => ucfirst($name) . "Ctrl",
-			"type" => $name,
+			"type" => $file == "controller" ? ucfirst($name) . "Ctrl" : $name
 		);
+		$file_name = $file.'-'.strtolower($name).'.js';
 
+		// Render
 		$template = $this->render($file . ".js", $data);
+
+		// Update json
+		$json = $this->read_json();
+
+		// Search module
+		foreach ($json['modules'] as $index => $imodule) {
+			if($imodule['modulename'] == $module){
+				// Update
+				$json['modules'][$index][$file][] = $file_name;
+			}
+		}
 		
-		$this->create_file($this->app_dir.'/'.$module.'/'.$file.'-'.strtolower($name).'.js', $template);
-		return true;
+		// Save json
+		$this->write_json($json);
+		
+		// Create file
+		$this->create_file($this->app_dir.'/'.$module.'/'.$file_name, $template);
 	}
 	
 
@@ -380,9 +409,13 @@ class Ngseed {
 		}
 		if($file != "delete"){
 			$this->create_app_file($module, $file, $name);
+			$this->update_app();
+
 			die('The file "' . $file . '" is created with success on module ' . $module . "\n");
 		} else {
 			$this->delete_module($module);
+			$this->update_app();
+
 			die('The module ' . $module . ' is deleted.' . "\n");
 		}
 	}

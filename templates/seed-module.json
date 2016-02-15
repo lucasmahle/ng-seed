@@ -3,8 +3,8 @@
 	"modulename": "",
 	"cofig": [],
 	"controller": [],
-	"directive": [],
 	"decorator": [],
+	"directive": [],
 	"factory": [],
 	"service": [],
 	"test": []
