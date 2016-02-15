@@ -309,8 +309,9 @@ class Ngseed {
 		// Create folder
 		$this->create_folder($module_dir);
 
-		// Create view folder
+		// Create view and test folders
 		$this->create_folder($module_dir . "/views");
+		$this->create_folder($module_dir . "/test");
 
 		// Create app.js
 		$this->create_file($module_dir . "/app.js", $this->render('app.js', array(
@@ -349,8 +350,8 @@ class Ngseed {
 		$data = array(
 			"appname" => $this->app_name,
 			"module" => $name,
-			"controllername" => ucfirst($name) . "Ctrl",
-			"filtername" => $name,
+			"controller" => ucfirst($name) . "Ctrl",
+			"type" => $name,
 		);
 
 		$template = $this->render($file . ".js", $data);

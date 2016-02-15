@@ -1,14 +1,14 @@
 ;(function(){
 	'use strict';
-
-	angular.module('%appname%.%module%')
 	
 	/** Module: %module%
-	  * Controller: %controllername%
+	  * Controller: %controller%
 	  * Description:
 	  */
 
-	.controller('%controllername%', ['$scope', function($scope) {
+	angular.module('%appname%.%module%')
+
+	.controller('%controller%', ['$scope', function($scope) {
 		var vm = this;
 		// Code...
 	}]);

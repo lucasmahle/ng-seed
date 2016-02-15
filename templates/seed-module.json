@@ -4,6 +4,7 @@
 	"cofig": [],
 	"controller": [],
 	"directive": [],
+	"decorator": [],
 	"factory": [],
 	"service": [],
 	"test": []
