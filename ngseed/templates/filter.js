@@ -3,7 +3,7 @@
 
 	/** Aplication: %appname%
 	  * Filter: %type%
-	  * Description: This filter make ...
+	  * Description: This filter do ...
 	  */
 
 	angular.module('%appname%')

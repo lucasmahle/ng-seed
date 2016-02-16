@@ -3,7 +3,7 @@
 	
 	/** Module: %module%
 	  * Controller: %type%
-	  * Description:
+	  * Description: This controller do ...
 	  */
 
 	angular.module('%appname%.%module%')

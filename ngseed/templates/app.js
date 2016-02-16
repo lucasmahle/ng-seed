@@ -6,6 +6,6 @@
 	  * Description: 
 	  */
 
-	angular.module('%appname%.%module%', []);
+	angular.module('%appname%.%module%', ['ui.router']);
 
 }());

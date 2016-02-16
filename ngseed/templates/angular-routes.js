@@ -15,14 +15,11 @@
 				url: APP.init_url,
 				template: ""
 			})
-			.state('state1', {
-				url: "/state1",
-				template: "<h2>Stateeeeeeee1</h2>"
-			})
-			.state('state2', {
-				url: "/state2",
-				template: "<h2>Stateeeeeeee22222222</h2>"
-			})
+			//.state('state-name', {
+			//	url: "/statte-url",
+			//	templateUrl: "url",
+			//	template: "<html>"
+			//})
 		;
 	}]);
 

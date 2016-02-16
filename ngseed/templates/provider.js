@@ -2,14 +2,14 @@
 	'use strict';
 
 	/** Aplication: %appname%
-	  * Factory: %type%
-	  * Description: This service make ...
+	  * Provider: %type%
+	  * Description: This provider make ...
 	  */
 
 	angular.module('%appname%.%module%')
 
-	.service('%type%', function() {
+	.provider('%type%', [function() {
 		//
-	});
+	}]);
 
 }());

@@ -1,5 +1,5 @@
 <?php
-require_once("class.ngseed.php");
+require_once(__DIR__ . '/ngseed/class.ngseed.php');
 
 function splitArguments($args) {
 	preg_match_all('/[\'"].*?[\'"]|[^ ]+/m', $args, $matches);
@@ -35,7 +35,7 @@ if( @$argv[0] == basename(__FILE__)){
 $ngseed = new Ngseed();
 
 // Settings
-$ngseed->setTemplate_dir( __DIR__ . '/templates' );
+$ngseed->setTemplate_dir( __DIR__ . '/ngseed/templates' );
 $ngseed->setApp_dir( __DIR__ );
 
 // Execute with arguments

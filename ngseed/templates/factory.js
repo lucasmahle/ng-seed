@@ -3,13 +3,17 @@
 
 	/** Aplication: %appname%
 	  * Factory: %type%
-	  * Description: This filter make ...
+	  * Description: This factory make ...
 	  */
 
 	angular.module('%appname%.%module%')
 
 	.factory('%type%', [function() {
-		//
+		return {
+			method: function(){
+				//
+			}
+		}
 	}]);
 
 }());

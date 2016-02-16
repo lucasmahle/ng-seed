@@ -3,14 +3,14 @@
 	
 	/** Module: %module%
 	  * Decorator: %type%
-	  * Description:
+	  * Description: This decorator make...
 	  */
 
 	angular.module('%appname%.%module%')
 
 	decorator("%type%", function( $delegate ) {
 		return function() {
-			return;
+			return '';
 		}
 	);
 	

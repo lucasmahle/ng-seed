@@ -6,6 +6,7 @@
 	"decorator": [],
 	"directive": [],
 	"factory": [],
+	"provider": [],
 	"service": [],
 	"test": []
 }
